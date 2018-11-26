@@ -1,9 +1,11 @@
-.phony: clean base trainer api preinstall
+# ML setup script
+# Command: sudo -H make
+.phony: clean base trainer api root_install
 base="sphinxbase-5prealpha"
 trainer="sphinxtrain-5prealpha"
 api="pocketsphinx-5prealpha"
 
-startup: setup.sh
+startup: setup.sh root_install
 	sh setup.sh
 	rm -f sphinx/*.tar.gz
 

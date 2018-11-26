@@ -1,3 +1,9 @@
+# python stuff
+venv
+
+# sphinx stuff
+sphinx
+
 # Prerequisites
 *.d
 

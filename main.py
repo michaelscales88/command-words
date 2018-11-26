@@ -1,4 +1,5 @@
-from src import 
+from src import test_speech_recognition
 
 if __name__ == "__main__":
-    pass
+    test_speech_recognition()
+

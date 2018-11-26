@@ -10,8 +10,11 @@ startup: setup.sh root_install
 	rm -f sphinx/*.tar.gz
 
 root_install:
-	apt install gcc automake autoconf libtool libasound2-dev \
-		bison swig python-dev python3-dev libpulse-dev
+	apt install -y gcc automake autoconf libtool libasound2-dev \
+	bison swig python-dev python3-dev libpulse-dev python-pyaudio \
+	python3-pyaudio portaudio19-dev
+	apt update
+	apt upgrade
 
 clean:
 	rm -rf sphinx/

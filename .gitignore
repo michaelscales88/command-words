@@ -1,3 +1,10 @@
+# python stuff
+venv
+__pycache__
+
+# sphinx stuff
+sphinx
+
 # Prerequisites
 *.d
 

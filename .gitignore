@@ -8,6 +8,9 @@ data
 
 # sphinx stuff
 sphinx
+en-us
+cmudict-en-us.dict
+en-us.lm.bin
 
 # Prerequisites
 *.d

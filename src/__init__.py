@@ -7,7 +7,7 @@ from pocketsphinx import LiveSpeech, get_model_path
 from .transcribe import recognize_speech_from_mic
 from .train import record_wav, update_adaptation_corpus
 
-def record_acoustic_adaptation_data():
+def add_training_data():
     folder = name = str(input("What do you want to name this training data?"))
     c = 1
     while True:
@@ -35,6 +35,10 @@ def record_acoustic_adaptation_data():
         )
         c += 1
     return "success"
+
+
+def generate_acoustic_features():
+    pass
 
 def test_speech_recognition():
     # set the list of words, maxnumber of guesses, and prompt limit

@@ -1,6 +1,10 @@
 # python stuff
 venv
 __pycache__
+wavs
+
+# ide stuff
+.vscode
 
 # sphinx stuff
 sphinx

@@ -1,9 +1,14 @@
+import os
 import random
 import speech_recognition as sr
 import time
+from pocketsphinx import LiveSpeech, get_model_path
 
 from .transcribe import recognize_speech_from_mic
+from .train import record_wav
 
+def record_acoustic_adaptation_data():
+    record_wav(str(input("what word")))
 
 def test_speech_recognition():
     # set the list of words, maxnumber of guesses, and prompt limit
@@ -63,7 +68,7 @@ def test_speech_recognition():
         # if not, repeat the loop if user has more attempts
         # if no attempts left, the user loses the game
         if guess_is_correct:
-            print("Correct! You win!".format(word))
+            print("Correct! You win!")
             break
         elif user_has_more_attempts:
             print("Incorrect. Try again.\n")

@@ -4,7 +4,7 @@ import time
 
 import speech_recognition as sr
 
-
+ 
 def recognize_speech_from_mic(recognizer, microphone):
     """Transcribe speech from recorded from `microphone`.
 
@@ -27,7 +27,8 @@ def recognize_speech_from_mic(recognizer, microphone):
     # adjust the recognizer sensitivity to ambient noise and record audio
     # from the microphone
     with microphone as source:
-        recognizer.adjust_for_ambient_noise(source)
+        print("Please wait. Calibrating microphone...")  
+        recognizer.adjust_for_ambient_noise(source, duration=1)
         audio = recognizer.listen(source)
 
     # set up the response object
@@ -41,11 +42,7 @@ def recognize_speech_from_mic(recognizer, microphone):
     # if a RequestError or UnknownValueError exception is caught,
     #     update the response object accordingly
     try:
-        response["transcription"] = recognizer.recognize_google(audio)
-    except sr.RequestError:
-        # API was unreachable or unresponsive
-        response["success"] = False
-        response["error"] = "API unavailable"
+        response["transcription"] = recognizer.recognize_sphinx(audio)
     except sr.UnknownValueError:
         # speech was unintelligible
         response["error"] = "Unable to recognize speech"

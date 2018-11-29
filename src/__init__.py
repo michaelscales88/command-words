@@ -5,10 +5,36 @@ import time
 from pocketsphinx import LiveSpeech, get_model_path
 
 from .transcribe import recognize_speech_from_mic
-from .train import record_wav
+from .train import record_wav, update_adaptation_corpus
 
 def record_acoustic_adaptation_data():
-    record_wav(str(input("what word")))
+    folder = name = str(input("What do you want to name this training data?"))
+    c = 1
+    while True:
+        a_info = {
+            "f_name": "{name}_{num}.wav".format(
+                name=name, num=str(c).zfill(4)
+            ),
+            "text": str(input("\n\nType the next line to train with. (-1 to quit)\n"))
+        }
+
+        if not a_info['text']:
+            print("Please enter a line or -1 to quit.")
+            continue
+
+        # Exit condition for recording training data
+        if a_info['text'] == '-1':
+            print("Exiting...")
+            break
+
+        record_wav(
+            folder, a_info['f_name'], a_info['text']
+        )
+        update_adaptation_corpus(
+            folder, name, a_info['f_name'], a_info['text']
+        )
+        c += 1
+    return "success"
 
 def test_speech_recognition():
     # set the list of words, maxnumber of guesses, and prompt limit

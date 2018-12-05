@@ -16,5 +16,5 @@ if __name__ == "__main__":
     while str(
         input("Do you want generate acoustic feature files?")
     )[0].lower() == 'y':
-        # test_speech_recognition()
+        test_speech_recognition()
         pass

@@ -2,7 +2,8 @@ import time
 import os
 from .recorder import Recorder
 
-SPHINX_DATA_DIR = "data"
+
+SPHINX_DATA_DIR = os.getenv("SPHINX_DATA_DIR", "data")
 
 
 def make_data_folder(folder):
@@ -42,7 +43,7 @@ def record_wav(folder, name, text):
     rec = Recorder(rate=16000)
     data_folder = os.path.join(SPHINX_DATA_DIR, folder)
     make_data_folder(data_folder)
-    with rec.open(os.path.join(data_folder, name), 'wb') as wav_file:
+    with rec.open(os.path.join(data_folder, name + ".wav"), 'wb') as wav_file:
         print(
             "\n\nRepeat the following text:\n\t\t'{}'\nin...".format(text)
         )

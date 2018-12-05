@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# command: sudo -H setup.sh
+# command: sudo -H make setup.sh
 
 export LD_LIBRARY_PATH=/usr/local/lib
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
@@ -15,7 +15,12 @@ if [ ! -f "$SPHINX_DIR/$sphinxbasetar" ] && [ ! -d "$SPHINX_DIR/$sphinxbase" ]; 
    wget -P "$SPHINX_DIR/" https://sourceforge.net/projects/cmusphinx/files/sphinxbase/5prealpha/$sphinxbasetar
    tar -xvf "$SPHINX_DIR/$sphinxbasetar" -C "$SPHINX_DIR/"
 fi
-
+en_full="cmusphinx-en-us-ptm-5.2.tar.gz"
+en_fulltar="$en_full.tar.gz"
+if [ ! -f "$SPHINX_DIR/$en_fulltar" ] && [ ! -d "$SPHINX_DIR/$en_full" ]; then
+   wget -P "$SPHINX_DIR/" https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/US%20English/$en_fulltar/download
+   tar -xvf "$SPHINX_DIR/$en_fulltar" -C "$SPHINX_DIR/"
+fi
 pocketsphinx="pocketsphinx-5prealpha"
 pocketsphinxtar="$pocketsphinx.tar.gz"
 if [ ! -f "$SPHINX_DIR/$pocketsphinxtar" ] && [ ! -d "$SPHINX_DIR/$pocketsphinx" ]; then

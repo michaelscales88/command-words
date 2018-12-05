@@ -22,16 +22,19 @@ root_install:
 	apt update
 	apt upgrade -y
 
-copy_default_acoustic_model: clear_acoustic_model
-	cp -a /usr/local/share/pocketsphinx/model/en-us/en-us .
-	cp -a /usr/local/share/pocketsphinx/model/en-us/cmudict-en-us.dict .
-	cp -a /usr/local/share/pocketsphinx/model/en-us/en-us.lm.bin .
+copy_default_acoustic_model:
+	cp -a /usr/local/share/pocketsphinx/model/en-us/en-us $(training_dir)
+	cp -a /usr/local/share/pocketsphinx/model/en-us/cmudict-en-us.dict $(training_dir)
+	cp -a /usr/local/share/pocketsphinx/model/en-us/en-us.lm.bin $(training_dir)
 
 clear_acoustic_model:
-	rm -rf en-us cmudict-en-us.dict en-us.lm.bin
+	rm -rf $(training_dir)
 
 clear_training_data:
-	rm -rf $(training_dir)
+	find $(training_dir) -maxdepth 1 \
+	! -name 'en-us' \
+	! -name 'cmudict-en-us.dict' \
+	! -name 'en-us.lm.bin' \
 
 clear_sphinx_data:
 	rm -rf $(sphinx_dir)

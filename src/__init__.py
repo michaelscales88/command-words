@@ -1,4 +1,5 @@
 import os
+import subprocess
 import random
 import speech_recognition as sr
 import time
@@ -7,12 +8,15 @@ from pocketsphinx import LiveSpeech, get_model_path
 from .transcribe import recognize_speech_from_mic
 from .train import record_wav, update_adaptation_corpus
 
+SPHINX_DATA_DIR = os.getenv("SPHINX_DATA_DIR", "data")
+
+
 def add_training_data():
     folder = name = str(input("What do you want to name this training data?"))
     c = 1
     while True:
         a_info = {
-            "f_name": "{name}_{num}.wav".format(
+            "f_name": "{name}_{num}".format(
                 name=name, num=str(c).zfill(4)
             ),
             "text": str(input("\n\nType the next line to train with. (-1 to quit)\n"))
@@ -38,7 +42,22 @@ def add_training_data():
 
 
 def generate_acoustic_features():
-    pass
+    feature_file = "{dir}/en-us/feat.params".format(dir=SPHINX_DATA_DIR)
+    acoustic_file_dir= "{dir}/test1".format(dir=SPHINX_DATA_DIR)
+    acoustic_fileid_file = "{dir}/test1.fileids".format(dir=acoustic_file_dir)
+    args = [
+        "sphinx_fe", 
+        "-argfile", feature_file,
+        "-samprate", "16000", 
+        "-c", acoustic_fileid_file,
+        "-di", acoustic_file_dir,
+        "-do", acoustic_file_dir,
+        "-ei", "wav",
+        "-eo", "mfc",
+        "-mswav", "yes"
+    ]
+    output = subprocess.check_output(args)
+    print(output)
 
 def test_speech_recognition():
     # set the list of words, maxnumber of guesses, and prompt limit

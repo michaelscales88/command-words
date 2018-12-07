@@ -29,7 +29,7 @@ def add_training_data():
         # Exit condition for recording training data
         if a_info['text'] == '-1':
             print("Exiting...")
-            break
+            return "Success!"
 
         record_wav(
             folder, a_info['f_name'], a_info['text']
@@ -38,26 +38,31 @@ def add_training_data():
             folder, name, a_info['f_name'], a_info['text']
         )
         c += 1
-    return "success"
 
 
 def generate_acoustic_features():
+    folder = str(input("Which data do you want to generate features for?"))
     feature_file = "{dir}/en-us/feat.params".format(dir=SPHINX_DATA_DIR)
-    acoustic_file_dir= "{dir}/test1".format(dir=SPHINX_DATA_DIR)
-    acoustic_fileid_file = "{dir}/test1.fileids".format(dir=acoustic_file_dir)
-    args = [
-        "sphinx_fe", 
-        "-argfile", feature_file,
-        "-samprate", "16000", 
-        "-c", acoustic_fileid_file,
-        "-di", acoustic_file_dir,
-        "-do", acoustic_file_dir,
-        "-ei", "wav",
-        "-eo", "mfc",
-        "-mswav", "yes"
-    ]
-    output = subprocess.check_output(args)
-    print(output)
+    acoustic_file_dir= "{dir}/{set}".format(dir=SPHINX_DATA_DIR, set=folder)
+    if os.path.isdir(acoustic_file_dir):
+        acoustic_fileid_file = "{dir}/{set}.fileids".format(
+            dir=acoustic_file_dir, set=folder
+        )
+        args = [
+            "sphinx_fe", 
+            "-argfile", feature_file,
+            "-samprate", "16000", 
+            "-c", acoustic_fileid_file,
+            "-di", acoustic_file_dir,
+            "-do", acoustic_file_dir,
+            "-ei", "wav",
+            "-eo", "mfc",
+            "-mswav", "yes"
+        ]
+        output = subprocess.check_output(args)
+        print(output)
+    else:
+        print("Data does not exist. Please select a valid data set.")
 
 def test_speech_recognition():
     # set the list of words, maxnumber of guesses, and prompt limit

@@ -1,4 +1,7 @@
-from src import test_speech_recognition, add_training_data, generate_acoustic_features
+from src import (
+    test_speech_recognition, add_training_data, generate_acoustic_features,
+    accum_obs_counts, create_mllr_transformation, map_update_model
+)
 #https://pypi.org/project/pocketsphinx`/
 
 if __name__ == "__main__":
@@ -7,14 +10,17 @@ if __name__ == "__main__":
         input("Do you want to add training data?")
     )[0].lower() == 'y':
         add_training_data()
+
     # Adapting the acoustic model
-    while str(
+    if str(
         input("Do you want generate acoustic feature files?")
     )[0].lower() == 'y':
-        generate_acoustic_features()
+        data_set = generate_acoustic_features()
+        if data_set:
+            accum_obs_counts(data_set)
+            create_mllr_transformation(data_set)
+            map_update_model(data_set)
+
     # Test the changes to the acoustic model
-    while str(
-        input("Do you want generate acoustic feature files?")
-    )[0].lower() == 'y':
+    while str(input("Do you test the model?"))[0].lower() == 'y':
         test_speech_recognition()
-        pass

@@ -1,8 +1,11 @@
 # Adapted from examples on https://realpython.com/python-speech-recognition/
+import os
 import random
 import time
 
 import speech_recognition as sr
+
+SPHINX_DATA_DIR = os.getenv("SPHINX_DATA_DIR", "data")
 
  
 def recognize_speech_from_mic(recognizer, microphone):
@@ -37,12 +40,22 @@ def recognize_speech_from_mic(recognizer, microphone):
         "error": None,
         "transcription": None
     }
-
+    
+    model_path = {
+        'hmm': os.path.join(SPHINX_DATA_DIR, 'en-us-adapt'),
+        'lm': os.path.join(SPHINX_DATA_DIR, 'en-us.lm.bin'),
+        'dict': os.path.join(SPHINX_DATA_DIR, 'cmudict-en-us.dict')
+    }
+    
     # try recognizing the speech in the recording
     # if a RequestError or UnknownValueError exception is caught,
     #     update the response object accordingly
     try:
-        response["transcription"] = recognizer.recognize_sphinx(audio)
+        response["transcription"] = recognizer.recognize_sphinx(
+            audio, language=(
+                model_path['hmm'], model_path['lm'], model_path['dict']
+            )
+        )
     except sr.UnknownValueError:
         # speech was unintelligible
         response["error"] = "Unable to recognize speech"

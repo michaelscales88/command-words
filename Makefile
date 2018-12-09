@@ -2,9 +2,12 @@
 # Command: sudo -H make
 exe=execute_training.sh
 setup=setup.sh
+
+# Vars
 .phony: clean base trainer api root_install startup sphinx_dir \
-	clear_training_data clear_sphinx_data clear_acoustic_model \
-	training_dir copy_default_acoustic_model
+	clear_training_data clear_sphinx_data clear_training_folder \
+	training_dir setup_training setup en_us
+en_us=cmusphinx-en-us-ptm-5.2
 sphinx_dir=sphinx
 training_dir=data
 
@@ -13,6 +16,9 @@ run: $(exe)
 
 startup: $(setup) root_install
 	./$<
+	$(MAKE) setup_training
+	pocketsphinx_mdef_convert -text $(training_dir)/en-us/mdef \
+		$(training_dir)/en-us/mdef.txt
 	rm -f $(sphinx_dir)/*.tar.gz
 
 root_install:
@@ -22,12 +28,16 @@ root_install:
 	apt update
 	apt upgrade -y
 
-copy_default_acoustic_model:
-	cp -a /usr/local/share/pocketsphinx/model/en-us/en-us $(training_dir)
+setup_training:
+	cp -a $(sphinx_dir)/$(en_us) $(training_dir)/en-us
+	cp -a $(training_dir)/en-us $(training_dir)/en-us-adapt
 	cp -a /usr/local/share/pocketsphinx/model/en-us/cmudict-en-us.dict $(training_dir)
 	cp -a /usr/local/share/pocketsphinx/model/en-us/en-us.lm.bin $(training_dir)
+	cp -a /usr/local/libexec/sphinxtrain/bw $(training_dir)
+	cp -a /usr/local/libexec/sphinxtrain/map_adapt $(training_dir)
+	cp -a /usr/local/libexec/sphinxtrain/mk_s2sendump $(training_dir)
 
-clear_acoustic_model:
+clear_training_folder:
 	rm -rf $(training_dir)
 
 clear_training_data:
@@ -39,4 +49,4 @@ clear_training_data:
 clear_sphinx_data:
 	rm -rf $(sphinx_dir)
 
-clean: clear_training_data clear_sphinx_data clear_acoustic_model
+clean: clear_training_data clear_sphinx_data clear_training_folder

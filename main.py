@@ -22,5 +22,9 @@ if __name__ == "__main__":
             map_update_model(data_set)
 
     # Test the changes to the acoustic model
-    while str(input("Do you test the model?"))[0].lower() == 'y':
-        test_speech_recognition()
+    while True:
+        cmd = str(input("Do you test the model?"))
+        if cmd and cmd[0].lower() == 'y':
+            test_speech_recognition()
+        else:
+            break

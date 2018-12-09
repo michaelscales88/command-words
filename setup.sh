@@ -6,8 +6,6 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 SPHINX_DIR="sphinx"
 
-mkdir -p "$SPHINX_DIR"
-
 # Download and unpack required CMU sphinx libraries
 sphinxbase="sphinxbase-5prealpha"
 sphinxbasetar="$sphinxbase.tar.gz"

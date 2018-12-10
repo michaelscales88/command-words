@@ -3,6 +3,7 @@ import subprocess
 import random
 import speech_recognition as sr
 import time
+from math import ceil
 from pocketsphinx import LiveSpeech, get_model_path
 
 from .transcribe import recognize_speech_from_mic
@@ -133,31 +134,38 @@ def map_update_model(data_name):
 def test_speech_recognition():
     # set the list of words, maxnumber of guesses, and prompt limit
     WORDS = [
-        "strafe", "pitch", "throttle", "left", "right", 
-        "up", "down", "forward", "back"
+        "strafe", "pitch", "throttle", 
+        "left", "right", "halt", "follow",
+        "up", "down", "forward", "back", 
+        "takeoff", "land", "hover", "rotate",
+        "drop", "start", "stop"
     ]
-    NUM_GUESSES = 3
-    PROMPT_LIMIT = 5
+    word_stats = {
+        word: {
+            "correct": False
+        } for word in WORDS
+    }
+    word_stats['total'] = {
+        "words": 0,
+        "correct": 0
+    }
+    PROMPT_LIMIT = 3
 
     # create recognizer and mic instances
     recognizer = sr.Recognizer()
     microphone = sr.Microphone()
 
-    # get a random word from the list
-    word = random.choice(WORDS)
-
     # format the instructions string
     instructions = (
-        "I'm thinking of one of these words:\n"
-        "{words}\n"
-        "You have {n} tries to guess which one.\n"
-    ).format(words=', '.join(WORDS), n=NUM_GUESSES)
+        "\nTesting the recognition accuracy for\n{words}\n"
+        "\nSpeak each word when prompted to do so."
+    ).format(words='\n'.join(WORDS))
 
     # show instructions and wait 3 seconds before starting the game
     print(instructions)
     time.sleep(3)
 
-    for i in range(NUM_GUESSES):
+    for word in WORDS:
         # get the guess from the user
         # if a transcription is returned, break out of the loop and
         #     continue
@@ -167,7 +175,7 @@ def test_speech_recognition():
         #     re-prompt the user to say their guess again. Do this up
         #     to PROMPT_LIMIT times
         for j in range(PROMPT_LIMIT):
-            print('Guess {}. Speak!'.format(i+1))
+            print("Prepare to speak the word [ {} ]...".format(word))
             guess = recognize_speech_from_mic(recognizer, microphone)
             if guess["transcription"]:
                 break
@@ -175,7 +183,7 @@ def test_speech_recognition():
                 break
             print("I didn't catch that. What did you say?\n")
 
-        # if there was an error, stop the game
+        # if there was an error, stop
         if guess["error"]:
             print("ERROR: {}".format(guess["error"]))
             break
@@ -185,16 +193,15 @@ def test_speech_recognition():
 
         # determine if guess is correct and if any attempts remain
         guess_is_correct = guess["transcription"].lower() == word.lower()
-        user_has_more_attempts = i < NUM_GUESSES - 1
 
-        # determine if the user has won the game
-        # if not, repeat the loop if user has more attempts
-        # if no attempts left, the user loses the game
         if guess_is_correct:
-            print("Correct! You win!")
-            break
-        elif user_has_more_attempts:
-            print("Incorrect. Try again.\n")
+            print("Correctly detected the word.")
+            word_stats['total']['correct'] += 1
         else:
-            print("Sorry, you lose!\nI was thinking of '{}'.".format(word))
-            break
+            print("Did not correctly detect the word.")
+        word_stats['total']['words'] += 1
+    print(
+        "Accuracy for the run: {}".format(
+            ceil(word_stats['total']['correct'], word_stats['total']['words'])
+        )
+    )

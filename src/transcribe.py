@@ -4,7 +4,6 @@ import random
 import time
 
 import speech_recognition as sr
-from .train import threeseccountdown
 
 SPHINX_DATA_DIR = os.getenv("SPHINX_DATA_DIR", "data")
 
@@ -32,8 +31,7 @@ def recognize_speech_from_mic(recognizer, microphone):
     # from the microphone
     with microphone as source:
         print("Please wait. Calibrating microphone...")  
-        recognizer.adjust_for_ambient_noise(source, duration=3)
-        threeseccountdown()
+        recognizer.adjust_for_ambient_noise(source, duration=1)
         print("** Listening **")
         audio = recognizer.listen(source)
         print("** Processing... Please wait... **")

@@ -137,7 +137,7 @@ def test_speech_recognition():
         "strafe", "pitch", "throttle", 
         "left", "right", "halt", "follow",
         "up", "down", "forward", "back", 
-        "takeoff", "land", "hover", "rotate",
+        "take off", "land", "hover", "rotate",
         "drop", "start", "stop"
     ]
     word_stats = {
@@ -175,7 +175,7 @@ def test_speech_recognition():
         #     re-prompt the user to say their guess again. Do this up
         #     to PROMPT_LIMIT times
         for j in range(PROMPT_LIMIT):
-            print("Prepare to speak the word [ {} ]...".format(word))
+            print("\n\nPrepare to speak the word [ {} ]...".format(word))
             guess = recognize_speech_from_mic(recognizer, microphone)
             if guess["transcription"]:
                 break
@@ -201,7 +201,5 @@ def test_speech_recognition():
             print("Did not correctly detect the word.")
         word_stats['total']['words'] += 1
     print(
-        "Accuracy for the run: {}".format(
-            ceil(word_stats['total']['correct'], word_stats['total']['words'])
-        )
+        "Accuracy for the run: {:10.2f}".format(word_stats['total']['correct'] / word_stats['total']['words'])
     )

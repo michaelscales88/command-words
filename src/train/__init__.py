@@ -1,10 +1,11 @@
 import time
 import os
 from .recorder import Recorder
+from .readers import line_by_line, word_by_word
 
 
 SPHINX_DATA_DIR = os.getenv("SPHINX_DATA_DIR", "data")
-
+CORPUS_FILE = "corpus.txt"
 
 def make_data_folder(folder):
     os.makedirs(folder, exist_ok=True)
@@ -55,3 +56,32 @@ def record_wav(folder, name, text):
                 wav_file.stop_recording()
                 break
     print("** Recording Stopped **")
+
+
+def add_training_data():
+    folder = name = str(input("What do you want to name this training data?"))
+    c = 1
+    while True:
+        a_info = {
+            "f_name": "{name}_{num}".format(
+                name=name, num=str(c).zfill(4)
+            ),
+            "text": line_by_line(CORPUS_FILE)
+        }
+
+        if not a_info['text']:
+            print("Please enter a line or -1 to quit.")
+            continue
+
+        # Exit condition for recording training data
+        if a_info['text'] == '-1':
+            print("Exiting...")
+            return "Success!"
+
+        record_wav(
+            folder, a_info['f_name'], a_info['text']
+        )
+        update_adaptation_corpus(
+            folder, name, a_info['f_name'], a_info['text']
+        )
+        c += 1

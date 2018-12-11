@@ -5,6 +5,7 @@ data
 
 # ide stuff
 .vscode
+.idea
 
 # sphinx stuff
 sphinx

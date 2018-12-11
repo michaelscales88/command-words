@@ -7,7 +7,7 @@ from math import ceil
 from pocketsphinx import LiveSpeech, get_model_path
 
 from .transcribe import recognize_speech_from_mic
-from .train import record_wav, update_adaptation_corpus
+from .train import add_training_data
 
 SPHINX_DATA_DIR = os.getenv("SPHINX_DATA_DIR", "data")
 

@@ -58,15 +58,16 @@ def record_wav(folder, name, text):
     print("** Recording Stopped **")
 
 
-def add_training_data():
+def add_training_data(single_word=False):
     folder = name = str(input("What do you want to name this training data?"))
     c = 1
-    while True:
+    generator = word_by_word if single_word else line_by_line
+    for text in generator(CORPUS_FILE):
         a_info = {
             "f_name": "{name}_{num}".format(
                 name=name, num=str(c).zfill(4)
             ),
-            "text": line_by_line(CORPUS_FILE)
+            "text": text
         }
 
         if not a_info['text']:

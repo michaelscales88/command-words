@@ -9,7 +9,9 @@ if __name__ == "__main__":
     while str(
         input("Do you want to add training data?")
     )[0].lower() == 'y':
-        add_training_data()
+        add_training_data(
+            input("Single world?")[0].lower() == 'y'
+        )
 
     # Adapting the acoustic model
     if str(
